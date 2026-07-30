@@ -1,20 +1,62 @@
-# Raspberry-Pi-5-Camera-Based-Car
-A Raspberry Pi 5 and Arduino Uno based robotic car that streams live video from the Raspberry Pi Camera while allowing real-time keyboard control from a laptop. The Raspberry Pi handles the high-level control, while the Arduino controls the motors through an L298N motor driver.
+# Raspberry Pi 5 Camera-Based Car
+
+A hybrid robotic car built using a **Raspberry Pi 5**, **Arduino Uno**, and **Raspberry Pi Camera Module 3**. The Raspberry Pi handles camera processing and keyboard input, while the Arduino controls the motors through an L298N motor driver using serial communication.
 
 ---
 
-## Hardware Used
+## Project Overview
+
+This project demonstrates a hybrid embedded system where:
+
+- Raspberry Pi 5 acts as the main controller.
+- Arduino Uno controls the DC motors.
+- Raspberry Pi Camera Module 3 provides a live camera preview.
+- The car is controlled remotely from a laptop using keyboard inputs.
+
+This architecture is useful when motor control is delegated to an Arduino while the Raspberry Pi handles high-level tasks such as camera processing, computer vision, and AI applications.
+
+---
+
+# Hardware Used
 
 - Raspberry Pi 5
-- Raspberry Pi Camera Module 3
+- Raspberry Pi Camera Module 3 (Wide)
 - Arduino Uno
 - L298N Motor Driver
 - 2 × DC Geared Motors
 - 2S Li-ion Battery Pack
-- Arduino uno Cable (Pi ↔ Arduino)
+- USB Cable
 - Jumper Wires
-- Chassis and Wheels
-- Power Bank 
+- Robot Chassis
+
+---
+
+# Software Used
+
+## Raspberry Pi
+
+- Ubuntu / Raspberry Pi OS
+- Python 3
+- pySerial
+- pynput
+- xrdp (Remote Desktop)
+- OpenSSH Server
+
+## Camera Software
+
+This project uses the official **rpicam-apps** package provided by Raspberry Pi.
+
+Applications used:
+
+- `rpicam-hello` – Live camera preview
+- `rpicam-still` – Capture images (optional)
+- `rpicam-vid` – Record videos (optional)
+
+The camera is accessed using **libcamera**, which is the official camera framework for Raspberry Pi OS.
+
+---
+
+# Folder Structure
 
 ---
 
@@ -23,7 +65,7 @@ A Raspberry Pi 5 and Arduino Uno based robotic car that streams live video from 
 ```
 Laptop
    │
-Keyboard Controls
+Keyboard Input
    │
    ▼
 Raspberry Pi 5
@@ -36,10 +78,10 @@ L298N Motor Driver
    │
 DC Motors
 
-Raspberry Pi Camera
-        │
-        ▼
- Live Camera Preview
+Raspberry Pi Camera Module 3
+             │
+             ▼
+      Live Camera Preview
 ```
 
 ---
@@ -64,18 +106,17 @@ Raspberry Pi Camera
 
 | L298N | Motor |
 |--------|-------|
-| OUT1, OUT2 | Left Motor |
-| OUT3, OUT4 | Right Motor |
+| OUT1 & OUT2 | Left Motor |
+| OUT3 & OUT4 | Right Motor |
 
 ---
 
-## Power
+## Power Connections
 
-- Battery → L298N
-- Arduino powered via USB from Raspberry Pi
-- Common ground between Arduino and L298N
-- Power the Pi using Power Bank 
-
+- Battery → L298N Motor Driver
+- Arduino powered through USB from Raspberry Pi
+- All grounds connected together
+-Pi powered through Power Bank
 ---
 
 # Raspberry Pi Setup
@@ -87,7 +128,7 @@ sudo systemctl enable ssh
 sudo systemctl start ssh
 ```
 
-Connect from your laptop using:
+Connect from your laptop:
 
 ```bash
 ssh <username>@<raspberry-pi-ip>
@@ -97,14 +138,14 @@ ssh <username>@<raspberry-pi-ip>
 
 ## 2. Enable Remote Desktop
 
-Install xrdp if it is not already installed.
+Install XRDP if necessary.
 
 ```bash
 sudo apt update
 sudo apt install xrdp
 ```
 
-Enable and start the service:
+Enable XRDP.
 
 ```bash
 sudo systemctl enable xrdp
@@ -113,43 +154,51 @@ sudo systemctl restart xrdp
 
 On Windows:
 
-1. Press **Win + R**
-2. Type
+- Press **Win + R**
+- Type:
 
 ```
 mstsc
 ```
 
-3. Enter your Raspberry Pi IP address.
-4. Log in using your Raspberry Pi username and password.
+- Enter the Raspberry Pi IP address.
+- Log in with your Raspberry Pi username and password.
 
-You should now see the Raspberry Pi desktop remotely.
+You can now access the Raspberry Pi desktop remotely.
 
 ---
 
 # Camera Setup
 
-Open a terminal on the Raspberry Pi.
-
-Run:
+Open a terminal.
 
 ```bash
 unset LD_LIBRARY_PATH
 ```
 
-Then start the camera preview:
+Start the live preview.
 
 ```bash
 rpicam-hello -t 0
 ```
 
-A live preview window should appear.
+If the camera is connected correctly, a live preview window will appear.
 
 ---
 
-# Install Python Dependencies
+# Installation
 
 Clone the repository.
+
+```bash
+git clone https://github.com/saicharankollu/Raspberry-Pi-5-Camera-Based-Car.git
+```
+
+Move into the project directory.
+
+```bash
+cd Raspberry-Pi-5-Camera-Based-Car
+```
 
 Create a virtual environment.
 
@@ -163,7 +212,7 @@ Activate it.
 source venv/bin/activate
 ```
 
-Install the required packages.
+Install dependencies.
 
 ```bash
 pip install -r requirements.txt
@@ -175,13 +224,13 @@ pip install -r requirements.txt
 
 ## Step 1
 
-Connect the Arduino to the Raspberry Pi using a USB cable.
+Connect the Arduino Uno to the Raspberry Pi using USB.
 
 ---
 
 ## Step 2
 
-Open a terminal and activate the virtual environment.
+Activate the Python virtual environment.
 
 ```bash
 source venv/bin/activate
@@ -201,9 +250,7 @@ python3 raspberry_pi/keyboard_control.py
 
 ## Step 4
 
-Open another terminal.
-
-Launch the camera preview.
+Open another terminal and launch the camera preview.
 
 ```bash
 unset LD_LIBRARY_PATH
@@ -216,16 +263,16 @@ rpicam-hello -t 0
 
 | Key | Action |
 |------|--------|
-| W | Forward |
-| S | Backward |
-| A | Left |
-| D | Right |
+| W | Move Forward |
+| S | Move Backward |
+| A | Turn Left |
+| D | Turn Right |
 | Release Key | Stop |
-| Esc | Exit Program |
+| Esc | Exit |
 
 ---
 
-# Serial Communication
+# Serial Commands
 
 The Raspberry Pi sends the following commands to the Arduino.
 
@@ -239,6 +286,8 @@ The Raspberry Pi sends the following commands to the Arduino.
 
 ---
 
-## Author
+# Author
 
 **Sai Charan Kollu**
+
+GitHub: https://github.com/saicharankollu
