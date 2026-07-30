@@ -56,10 +56,6 @@ The camera is accessed using **libcamera**, which is the official camera framewo
 
 ---
 
-# Folder Structure
-
----
-
 # System Architecture
 
 ```
@@ -82,7 +78,7 @@ Raspberry Pi Camera Module 3
              │
              ▼
       Live Camera Preview
-```
+---
 
 ---
 
