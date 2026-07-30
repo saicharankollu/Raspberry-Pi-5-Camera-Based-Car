@@ -1,0 +1,59 @@
+import serial
+import time
+from pynput import keyboard
+
+# Connect to Arduino
+arduino = serial.Serial('/dev/ttyACM0', 9600)
+time.sleep(2)
+
+current = None
+
+key_map = {
+    'w': 'F',
+    's': 'B',
+    'a': 'L',
+    'd': 'R'
+}
+
+def on_press(key):
+    global current
+
+    try:
+        k = key.char.lower()
+
+        if k in key_map:
+            cmd = key_map[k]
+
+            # Send only if the command changes
+            if cmd != current:
+                arduino.write(cmd.encode())
+                current = cmd
+                print("Sent:", cmd)
+
+    except AttributeError:
+        pass
+
+
+def on_release(key):
+    global current
+
+    try:
+        if key.char.lower() in key_map:
+            arduino.write(b'S')
+            current = None
+            print("Sent: S")
+
+    except AttributeError:
+        pass
+
+    if key == keyboard.Key.esc:
+        return False
+
+
+with keyboard.Listener(
+    on_press=on_press,
+    on_release=on_release
+) as listener:
+    listener.join()
+
+arduino.close()
