@@ -54,8 +54,6 @@ Applications used:
 
 The camera is accessed using **libcamera**, which is the official camera framework for Raspberry Pi OS.
 
----
-
 # System Architecture
 
 ```
@@ -78,7 +76,7 @@ Raspberry Pi Camera Module 3
              │
              ▼
       Live Camera Preview
----
+```
 
 ---
 
@@ -112,7 +110,7 @@ Raspberry Pi Camera Module 3
 - Battery → L298N Motor Driver
 - Arduino powered through USB from Raspberry Pi
 - All grounds connected together
--Pi powered through Power Bank
+
 ---
 
 # Raspberry Pi Setup
@@ -287,3 +285,6 @@ The Raspberry Pi sends the following commands to the Arduino.
 **Sai Charan Kollu**
 
 GitHub: https://github.com/saicharankollu
+
+---
+
